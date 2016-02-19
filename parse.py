@@ -77,6 +77,11 @@ for match in matches:
                 #ignores if Crime type not as per https://www.police.uk/about-this-site/faqs/#what-do-the-crime-categories-mean
                 if row['Crime type'] in deepingcrime_dict:
                     deepingcrime_dict[row['Crime type']] += 1
+                elif row['Crime type']=="Violent crime":
+                    # To handle renaming of category from 'Violent crime' in June 2013, see https://data.police.uk/changelog/
+                    deepingcrime_dict['Violence and sexual offences'] += 1
+                else:
+                    print("Crime type not in list of crime categories: ",row['Crime type'])
 
         f.write("\n%s," % row['Month'])
         for key in deepingcrime_dict:
