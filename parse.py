@@ -58,7 +58,7 @@ deepingcrime_dict = {
 
 f = open("crimeresults.csv", "w")
 f.write("Month,")
-for key in deepingcrime_dict:
+for key in sorted(deepingcrime_dict):
     f.write("%s," % key)
 
 for match in matches:
@@ -84,7 +84,7 @@ for match in matches:
                     print("Crime type not in list of crime categories: ",row['Crime type'])
 
         f.write("\n%s," % row['Month'])
-        for key in deepingcrime_dict:
+        for key in sorted(deepingcrime_dict):
             f.write("%s," % deepingcrime_dict[key]) # write all the crime counts, comma separated
 
    # print(deepingcrime_dict)
