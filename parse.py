@@ -5,21 +5,12 @@ import csv
 import fnmatch
 import os
 
-
-
 matches = []
 for root, dirnames, filenames in os.walk('Dec2010-Dec2015'):
     for filename in fnmatch.filter(filenames, '*csv'):
         matches.append(os.path.join(root, filename))
 
-print(len(matches))
-
-deepingcrime = []
-deepingcrime_list = []
-
-crime_cats_dict = {}
-
-
+print("Number of csv files: ", len(matches))
 
 #found using http://www.research-lincs.org.uk/LROPresentationTools/UI/Pages/MappingTool.aspx?dataInstanceID=2006
 #compared with https://www.police.uk/lincolnshire/NC47/crime/2015-02/
@@ -61,7 +52,6 @@ f.write("Month,All crime")
 for key in sorted(deepingcrime_dict):
     f.write(",%s" % key)
 
-
 for match in matches:
 
     #reset for each new CSV file, i.e. month
@@ -72,14 +62,12 @@ for match in matches:
         reader = csv.DictReader(csvfile)
         for row in reader:
             if row['LSOA code'] in LSOA_codes:
-               # print(row['Month'],row['LSOA name'])
-                deepingcrime.append(row['Month'])
 
-                #ignores if Crime type not as per https://www.police.uk/about-this-site/faqs/#what-do-the-crime-categories-mean
                 if row['Crime type'] in deepingcrime_dict:
                     deepingcrime_dict[row['Crime type']] += 1
                 elif row['Crime type']=="Violent crime":
-                    # To handle renaming of category from 'Violent crime' in June 2013, see https://data.police.uk/changelog/
+                    # To handle renaming of category from 'Violent crime' in June 2013
+                    # see https://data.police.uk/changelog/
                     deepingcrime_dict['Violence and sexual offences'] += 1
                 else:
                     print("Crime type not in list of crime categories: ",row['Crime type'])
@@ -88,21 +76,4 @@ for match in matches:
         f.write("%s" % sum(deepingcrime_dict.values()))
         for key in sorted(deepingcrime_dict):
             f.write(",%s" % deepingcrime_dict[key]) # write all the crime counts, comma separated
-
-   # print(deepingcrime_dict)
-
-
-f.close()
-d = {x:deepingcrime.count(x) for x in deepingcrime}
-bins, freq = list(d.keys()), list(d.values())
-#print(bins)
-#print(freq)
-
-#print(deepingcrime)
-
-f = open("results.csv", "w")
-
-for i in range(len(bins)):
-    f.write("{},{}\n".format(bins[i], freq[i]))
-
 f.close()
