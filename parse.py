@@ -1,12 +1,9 @@
-#to do
-#currently ignoring where crime categories don't match up with https://www.police.uk/about-this-site/faqs/#what-do-the-crime-categories-mean
-
 import csv
 import fnmatch
 import os
 
 matches = []
-for root, dirnames, filenames in os.walk('Dec2010-Dec2015'):
+for root, dirnames, filenames in os.walk('data'):
     for filename in fnmatch.filter(filenames, '*csv'):
         matches.append(os.path.join(root, filename))
 
