@@ -44,10 +44,18 @@ deepingcrime_dict = {
     'Violence and sexual offences':0
     }
 
-f = open("crimeresults.csv", "w")
-f.write("Month,All crime")
+results_full_fieldnames=['Crime ID','Month','Reported by','Falls within','Longitude','Latitude','Location','LSOA code',
+                         'LSOA name','Crime type','Last outcome category','Context']
+
+results_full_csv_file = open("crimeresults_full.csv", "w")
+results_full_csv = csv.DictWriter(results_full_csv_file,  fieldnames=results_full_fieldnames, delimiter=',', lineterminator='\n')
+results_full_csv.writeheader()
+
+results_summary_file = open("crimeresults_summary.csv", "w")
+results_summary_file.write("Month,All crime")
+
 for key in sorted(deepingcrime_dict):
-    f.write(",%s" % key)
+    results_summary_file.write(",%s" % key)
 
 for match in matches:
 
@@ -69,8 +77,11 @@ for match in matches:
                 else:
                     print("Crime type not in list of crime categories: ",row['Crime type'])
 
-        f.write("\n%s," % row['Month'])
-        f.write("%s" % sum(deepingcrime_dict.values()))
+                results_full_csv.writerow(row)
+
+        results_summary_file.write("\n%s," % row['Month'])
+        results_summary_file.write("%s" % sum(deepingcrime_dict.values()))
         for key in sorted(deepingcrime_dict):
-            f.write(",%s" % deepingcrime_dict[key]) # write all the crime counts, comma separated
-f.close()
+            results_summary_file.write(",%s" % deepingcrime_dict[key]) # write all the crime counts, comma separated
+
+results_summary_file.close()
